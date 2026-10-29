@@ -51,6 +51,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker:ro
+      - /proc/meminfo:/proc/meminfo:ro
       - ./panel/app:/opt/pxe-panel/app
       - /srv/tftp:/srv/tftp
       - /srv/www/pxe:/srv/www/pxe
