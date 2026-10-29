@@ -157,11 +157,44 @@ Once deployed, verify the active services:
 | **UDP** | `4011` | `dnsmasq` | ProxyDHCP PXE architecture response |
 | **TCP** | `80` | `nginx` | High-speed HTTP kernel/initrd/WinPE delivery |
 | **TCP** | `445` | `smbd` | Samba Windows install share |
+| **TCP** | `8080` | `panel` | FastAPI Web Management UI |
+
+---
+
+## 🐳 Docker Compose Management
+
+The entire stack is containerized and managed via Docker Compose:
+
+```bash
+# Start all services
+docker compose up -d
+
+# View service health and status
+docker compose ps
+
+# View container logs
+docker compose logs -f [dnsmasq|nginx|samba|panel]
+
+# Restart stack
+docker compose restart
+
+# Stop all services
+docker compose down
+```
+
+### 🌐 Web Control Center
+
+Navigate to `http://172.16.16.6:8080/` to access the PXE Server Control Center:
+- **Service Control**: Start, stop, and restart individual containers with one click.
+- **Client Tracking**: Live table of machines requesting DHCP/PXE leases and downloading OS media.
+- **Image Manager**: Upload OS images (ISO, kernel, initrd) and automate Windows ISO conversion.
+- **Menu Editor**: Live in-browser editing of `grub.cfg`, `pxelinux.cfg/default`, and `dnsmasq-pxe.conf`.
+- **System Metrics**: Real-time CPU, RAM, and Disk storage graphs.
 
 ### Test Commands:
 ```bash
 # Check listening ports
-ss -tulpn | grep -E ':(67|69|80|445|4011)'
+ss -tulpn | grep -E ':(67|69|80|445|4011|8080)'
 
 # Test TFTP locally
 tftp 172.16.16.6 -c get shimx64.efi
@@ -171,5 +204,8 @@ curl -I http://172.16.16.6/grub/grub.cfg
 
 # Test Samba locally
 smbclient -L //172.16.16.6 -N
+
+# Test Web Panel locally
+curl -s http://172.16.16.6:8080/api/status
 ```
 
